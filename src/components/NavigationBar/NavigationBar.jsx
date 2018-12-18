@@ -13,7 +13,7 @@ import {
   DropdownItem
 } from "reactstrap";
 import './style.sass'
-import Login from '../../containers/Login/Login'
+import LoginRegistry from '../../containers/LoginRegistry/LoginRegistry'
 
 class NavigationBar extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class NavigationBar extends Component {
               <Nav className="ml-auto" navbar>
                 <NavItem>
                   <NavLink onClick={this.onRegistryClick}>
-                    {isInRegistry ? 'Sign in' : 'Log in'}
+                    {isInRegistry ? 'Log in' : 'Sign in'}
                   </NavLink>
                 </NavItem>
                 <UncontrolledDropdown nav inNavbar>
@@ -65,7 +65,7 @@ class NavigationBar extends Component {
             </Collapse>
           </Navbar>
         <div className="navGeneral">
-          {!isInRegistry && <Login />}
+          {<LoginRegistry isRegistry={isInRegistry} />}
         </div>
          
           

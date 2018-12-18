@@ -3,6 +3,9 @@ const BUTTON_LOGIN_TEXT = 'Log in'
 const DATA_STORAGE = 'usersReports'
 const USER_PASS_ERROR = 'Error in user or password'
 const USER_PASS_EMPTY = 'Remember fill all the blanks'
+const CREATE_REGISTRY = 'Create'
+const REGISTRY_MSJ = 'Registry'
+const DIFFERENT_PASSWORDS = 'The passwords must be the same'
 
 const USERS_REPORTS = 
   { users: [{ email: 'robertopccon@gmail.com', password: '123' }], reports: []}
@@ -21,5 +24,8 @@ export {
   saveDataLocalStorage,
   GET_DATA_LOCALSTORAGE,
   USER_PASS_ERROR,
-  USER_PASS_EMPTY
+  USER_PASS_EMPTY,
+  CREATE_REGISTRY,
+  REGISTRY_MSJ,
+  DIFFERENT_PASSWORDS
 }
