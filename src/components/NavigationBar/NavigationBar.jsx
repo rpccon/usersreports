@@ -22,12 +22,17 @@ class NavigationBar extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       isInRegistry: 0,
-      isOpen: false
+      isUserViewOpen: false,
+      isOpen: false,
     };
   }
 
   onRegistryClick = () => {
     this.setState({ isInRegistry: !this.state.isInRegistry })
+  }
+
+  openMasterPageMenu = () => {
+    this.setState({ isUserViewOpen: !this.isUserViewOpen })
   }
   
   toggle() {
@@ -36,8 +41,8 @@ class NavigationBar extends Component {
     });
   }
   render() {
-    const { isInRegistry } = this.state
-
+    const { isInRegistry, isUserViewOpen } = this.state
+    
     return (
       <div>
           <Navbar to="/"className="navColor" color="red" light expand="md">
@@ -45,27 +50,32 @@ class NavigationBar extends Component {
             <NavbarToggler onClick={this.toggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <NavLink onClick={this.onRegistryClick}>
+                <NavItem onClick={this.onRegistryClick}>
+                  <NavLink >
                     {isInRegistry ? 'Log in' : 'Sign in'}
                   </NavLink>
                 </NavItem>
-                <UncontrolledDropdown nav inNavbar>
+                {isUserViewOpen
+                && <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret>
                     Options
                   </DropdownToggle>
                   <DropdownMenu right>
-                    <DropdownItem>Option 1</DropdownItem>
-                    <DropdownItem>Option 2</DropdownItem>
+                  {/*<DropdownItem>Option 1</DropdownItem>
+                    <DropdownItem>Option 2</DropdownItem>*/}
                     <DropdownItem divider />
-                    <DropdownItem>Reset</DropdownItem>
+                    <DropdownItem>Go out</DropdownItem>
                   </DropdownMenu>
-                </UncontrolledDropdown>
+                </UncontrolledDropdown>}
+
               </Nav>
             </Collapse>
           </Navbar>
         <div className="navGeneral">
-          {<LoginRegistry isRegistry={isInRegistry} />}
+          {<LoginRegistry
+            openMasterPageMenu={this.openMasterPageMenu} 
+            isRegistry={isInRegistry} 
+          />}
         </div>
          
           

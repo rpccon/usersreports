@@ -6,10 +6,15 @@ import {
   GET_DATA_LOCALSTORAGE,
   USER_PASS_ERROR,
   USER_PASS_EMPTY,
+  updateDataLocalStorage,
   CREATE_REGISTRY,
   REGISTRY_MSJ,
-  DIFFERENT_PASSWORDS
+  DIFFERENT_PASSWORDS,
+  EXIST_USER,
+  SUCCESS_NEW_USER
 } from '../../helpers/strings.js'
+
+
 
 const textFields = ({ usernameValue, passwordValue, repeatPasswordValue }, usernameHandleChange, passwordHandleChange, repeatPasswordHandleChange, isRegistry) => {
   const formDatasets =
@@ -21,8 +26,7 @@ const textFields = ({ usernameValue, passwordValue, repeatPasswordValue }, usern
     
     formDatasets.push(newDataset)
   }
-  console.log('ddd', isRegistry)
-  console.log(formDatasets)
+
   return formDatasets
 }
 
@@ -32,6 +36,23 @@ const validateUserPassword = (user, password) => {
   const result = users.find((elem) => elem.email === user && elem.password === password )
 
   return result
+}
+
+const validateIfUsersExists = (email) => {
+  const { users } = GET_DATA_LOCALSTORAGE()
+  const result = users.find((elem) => elem.email === email )
+
+  return result  
+}
+
+function createUserLocalStorage(usernameValue, passwordValue) {
+  const newUser = { email: usernameValue, password: passwordValue }
+  const oldData = GET_DATA_LOCALSTORAGE()
+  const users = [...oldData.users, newUser]
+  const reports = oldData.reports
+  const newData = { users, reports }
+
+  updateDataLocalStorage(newData)
 }
 
 class LoginRegistry extends Component {
@@ -59,27 +80,60 @@ class LoginRegistry extends Component {
     this.setState({ passwordValue: context.target.value })
   }
 
+  componentWillReceiveProps(){
+    this.cleanBlanks()
+  }
+
+  visitMaterPageCreateUser(usernameValue, passwordValue) {
+   const { isRegistry, openMasterPageMenu } = this.props
+
+   if(isRegistry){
+      const existUser = validateIfUsersExists(usernameValue)
+
+      if(existUser){
+        this.updateErrorMessage(EXIST_USER)
+      } else {
+        
+        createUserLocalStorage(usernameValue, passwordValue)
+        this.cleanBlanks()
+        this.updateErrorMessage(SUCCESS_NEW_USER, 1)
+      }
+   } else {
+      openMasterPageMenu()
+   }
+  }
+  
+  cleanBlanks(){
+    const cleanVariables = {
+      usernameValue: "",
+      passwordValue: "",
+      repeatPasswordValue: "",
+      errorMessage: "",
+      rigthMessage: 0
+    }
+  
+    this.setState(cleanVariables)
+  }
   validateRegistryCredentials(params) {
     const { usernameValue, passwordValue, repeatPasswordValue } = params
     const verifyRegistry = this.props.isRegistry ? passwordValue === repeatPasswordValue : passwordValue
     
     if(verifyRegistry){
-      const validate = validateUserPassword(usernameValue, passwordValue)
+      const validate = this.props.isRegistry ? 1 : validateUserPassword(usernameValue, passwordValue)
       
       if(validate){
-        return 'Todo bien'
+        this.visitMaterPageCreateUser(usernameValue, passwordValue)
       } else {
-        return USER_PASS_ERROR
+        this.updateErrorMessage(USER_PASS_ERROR)
       }
-    } else {
-      return DIFFERENT_PASSWORDS
+    }
+    else {
+      this.updateErrorMessage(DIFFERENT_PASSWORDS)
     }
   }
 
-  
-
-  updateErrorMessage(msj) {
-    this.setState({ errorMessage: msj })
+  updateErrorMessage(msj, kindMsj) {
+    this.setState({ errorMessage: msj, rigthMessage: kindMsj })
   }
 
   onClickAction = () => {
@@ -94,9 +148,7 @@ class LoginRegistry extends Component {
       this.setState({ errorMessage: USER_PASS_EMPTY })
     }
     else {
-      const resultValidation = this.validateRegistryCredentials(this.state)
-      
-      this.updateErrorMessage(resultValidation)
+      this.validateRegistryCredentials(this.state)
     }
     
   }
@@ -105,8 +157,8 @@ class LoginRegistry extends Component {
     this.props.isRegistry ? [CREATE_REGISTRY, REGISTRY_MSJ] : [LOGIN_LABEL, BUTTON_LOGIN_TEXT]
   )
   
-
   render(){
+
     const textFieldsResult = textFields(this.state, this.usernameHandleChange, this.passwordHandleChange, this.repeatPasswordHandleChange, this.props.isRegistry)
     const labels = this.validateButtonLabelMsj()
 
@@ -117,6 +169,7 @@ class LoginRegistry extends Component {
         buttonText={labels[1]}
         textFields={textFieldsResult}
         errorMessage={this.state.errorMessage}
+        rigthMessage={this.state.rigthMessage}
       />
     )
   }
