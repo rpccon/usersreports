@@ -14,6 +14,9 @@ import {
 } from "reactstrap";
 import './style.sass'
 import LoginRegistry from '../../containers/LoginRegistry/LoginRegistry'
+import DropDownElement from '../DropDownElement/DropDownElement'
+import TableElement from '../TableElement/TableElement'
+import DropDownTableCreate from '../../containers/DropdownTableCreate/DropdownTableCreate'
 
 class NavigationBar extends Component {
   constructor(props) {
@@ -72,14 +75,11 @@ class NavigationBar extends Component {
             </Collapse>
           </Navbar>
         <div className="navGeneral">
-          {<LoginRegistry
+          {isUserViewOpen ? <DropDownTableCreate /> : <LoginRegistry
             openMasterPageMenu={this.openMasterPageMenu} 
             isRegistry={isInRegistry} 
           />}
         </div>
-         
-          
-
       </div>
     );
   }

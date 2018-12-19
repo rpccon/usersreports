@@ -10,7 +10,7 @@ const EXIST_USER = 'Email unavailable'
 const SUCCESS_NEW_USER = 'User added'
 
 const USERS_REPORTS = {
-  users: [{ email: 'robertopccon@gmail.com', password: '123' }],
+  users: [{ email: '123', password: '123' }],
   reports: []
 }
 
