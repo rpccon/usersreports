@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import TableElement from '../../components/TableElement/TableElement'
 import DropDownElement from '../../components/DropDownElement/DropDownElement'
-import { API, GET_USER_LOGGED } from '../../helpers/strings'
+import { API, GET_USER_LOGGED, refreshReportsUser, GET_DATA_FROM_USER } from '../../helpers/strings'
 
 import './style.sass'
 
@@ -20,7 +20,15 @@ const dropdownReportsItems = [
   { value: 6, name: 'jobs' }
 ]
 
+/*
 
+  { value: 3, name: 'addresses'},
+  { value: 4, name: 'names' },
+  { value: 5, name: 'social'},
+  { value: 6, name: 'jobs' }
+
+
+*/
 const getReports = () => {
   return new Promise((resolve, reject) => {
     const userEmail = GET_USER_LOGGED().email
@@ -40,12 +48,55 @@ const getReports = () => {
 const getPartsEachNames = (names) => (
   names.map((elem) => elem.parts)
 )
+const generateDataSetsStorage = (keyColumn) => {
+  const userLogged = GET_USER_LOGGED().email
+  const data = GET_DATA_FROM_USER(userLogged)
+
+  if(data){
+    const { reports } = data
+    const dataKey = reports[keyColumn]
+
+    if(dataKey.length !== 0){
+      const keysData = Object.keys(dataKey[0])
+      const definedKeys = keysData.length > 4 ? keysData.splice(0, 4) : keysData // *
+      const valuesData = Object.values(dataKey[0]) // *
+
+      console.log('sdfsdf')
+      console.log(definedKeys)
+      console.log(valuesData)
+      console.log(dataKey)
+      return { dataSets: dataKey, keys: definedKeys }
+
+    }
+
+    return {}
+  }
+  /*const dataKey = keyColumn === 'names' ? test : data[keyColumn]
+
+  if(dataKey.length != 0){
+    const keysData = Object.keys(dataKey[0])
+    const definedKeys = keysData.length > 4 ? keysData.splice(0, 4) : keysData // *
+    const valuesData = Object.values(dataKey[0]) // *
+  } else {
+    console.log('vacío')
+  }*/
+
+  //const newData = data.map(({  }) => ({ addresses, parts, jobs, social }))
+}
 const analyzeResult = (resolve, keyColumn) => {
 
   if(keyColumn !== "" && resolve.data.length !== 0){
-    const data = resolve.data
-    const test = getPartsEachNames(data.names)
-    const dataKey = keyColumn === 'names' ? test : data[keyColumn]
+    const { addresses, names, social, jobs } = resolve.data
+    const namesParts = getPartsEachNames(names)
+    const ownUser = GET_USER_LOGGED().email
+    const reports = { addresses, social, jobs, names: namesParts }
+    const dataToStorage = { email: ownUser, reports }
+
+    refreshReportsUser(ownUser, dataToStorage)
+
+
+
+    /*const dataKey = keyColumn === 'names' ? test : data[keyColumn]
 
     if(dataKey.length != 0){
       const keysData = Object.keys(dataKey[0])
@@ -53,7 +104,7 @@ const analyzeResult = (resolve, keyColumn) => {
       const valuesData = Object.values(dataKey[0]) // *
     } else {
       console.log('vacío')
-    }
+    }*/
 
     //const newData = data.map(({  }) => ({ addresses, parts, jobs, social }))
   }
@@ -69,7 +120,9 @@ class DropDownTableCreate extends Component {
       dropdownReportsSelection: dropdownReportsItems[0].name,
       dataSets: [],
       idSelection: "1",
-      idSelectionReports: "3"
+      idSelectionReports: "3",
+      requestSuccess: 0,
+      keysTable: []
     }
   }
 
@@ -83,14 +136,27 @@ class DropDownTableCreate extends Component {
   }
 
   render(){
-    if(this.state.dataSets.length === 0){
-
+    const { dataSets, requestSuccess } = this.state
+ 
+    if(dataSets.length === 0 && requestSuccess === 0){
       getReports().then(
         resolve => {
+          console.log('lo hizo')
           analyzeResult(resolve, this.state.dropdownReportsSelection)
-         // this.setState({ datasets: resolve })
+          const dataResult = generateDataSetsStorage(this.state.dropdownReportsSelection)
+          
+          if(dataResult == {}){
+            this.setState({ requestSuccess: 1 })
+          } else {
+            const { keys, dataSets } = dataResult
+            console.log('dataSets actualizados')
+            this.setState({ keysTable: keys, dataSets })
+            console.log(this.state)
+          }
+
         }
-      )  
+      )    
+
     }
   
     const validation = this.state.idSelection === "1" || this.state.idSelection === ""

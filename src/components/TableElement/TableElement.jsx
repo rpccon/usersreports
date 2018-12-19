@@ -18,7 +18,7 @@ class TableElement extends Component {
         <tbody>
           <tr>
             
-            <td>Mark</td>
+            <td nowrap>Markasdasdsadasdasdasdsadsadsadsdadasdasdasdsadsadasdsadasdasd</td>
             <td>Otto</td>
             <td>@mdo</td>
             <th>Machito</th>

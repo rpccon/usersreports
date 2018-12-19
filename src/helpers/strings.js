@@ -24,6 +24,24 @@ function setUserLogged(email, password) {
   localStorage.setItem(USER_LOGGED, JSON.stringify({ email, password }))
 }
 
+function refreshReportsUser(emailUser, report){
+  const { users, reports } = GET_DATA_LOCALSTORAGE()
+  const findUser = reports.map((elem) => elem.email === emailUser)
+
+  if(findUser.length === 0){
+    reports.push(report)
+
+    const newDataStorage = { users, reports }
+  
+    updateDataLocalStorage(newDataStorage)
+  }
+}
+const GET_DATA_FROM_USER= (email) => {
+  const { reports } = GET_DATA_LOCALSTORAGE()
+  const data = reports.find((elem) => (elem.email = email))
+
+  return data
+}
 const GET_USER_LOGGED = () => (
   JSON.parse(localStorage.getItem(USER_LOGGED))
 )
@@ -51,5 +69,7 @@ export {
   SUCCESS_NEW_USER,
   API,
   setUserLogged,
-  GET_USER_LOGGED
+  GET_USER_LOGGED,
+  refreshReportsUser,
+  GET_DATA_FROM_USER
 }
