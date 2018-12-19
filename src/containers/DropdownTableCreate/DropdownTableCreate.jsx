@@ -20,15 +20,6 @@ const dropdownReportsItems = [
   { value: 6, name: 'jobs' }
 ]
 
-/*
-
-  { value: 3, name: 'addresses'},
-  { value: 4, name: 'names' },
-  { value: 5, name: 'social'},
-  { value: 6, name: 'jobs' }
-
-
-*/
 const getReports = () => {
   return new Promise((resolve, reject) => {
     const userEmail = GET_USER_LOGGED().email
@@ -36,9 +27,6 @@ const getReports = () => {
     axios.get(url)
     .then(
       res => {
-        //const dataSetsJson = buildDataAsJson(res.data)
-        console.log('response')
-        console.log(res)
         resolve(res)
       },
       error => {reject(error)}
@@ -56,32 +44,17 @@ const generateDataSetsStorage = (keyColumn) => {
     const { reports } = data
     const dataKey = reports[keyColumn]
 
-    if(dataKey.length !== 0){
+    if(dataKey && dataKey.length !== 0){
+      const enoughElements = keyColumn === 'jobs' ? 3 : 4
       const keysData = Object.keys(dataKey[0])
-      const definedKeys = keysData.length > 4 ? keysData.splice(0, 4) : keysData // *
-      const valuesData = Object.values(dataKey[0]) // *
+      const definedKeys = keysData.length > enoughElements ? keysData.splice(0, enoughElements) : keysData
 
-      console.log('sdfsdf')
-      console.log(definedKeys)
-      console.log(valuesData)
-      console.log(dataKey)
       return { dataSets: dataKey, keys: definedKeys }
 
     }
 
     return {}
   }
-  /*const dataKey = keyColumn === 'names' ? test : data[keyColumn]
-
-  if(dataKey.length != 0){
-    const keysData = Object.keys(dataKey[0])
-    const definedKeys = keysData.length > 4 ? keysData.splice(0, 4) : keysData // *
-    const valuesData = Object.values(dataKey[0]) // *
-  } else {
-    console.log('vacío')
-  }*/
-
-  //const newData = data.map(({  }) => ({ addresses, parts, jobs, social }))
 }
 const analyzeResult = (resolve, keyColumn) => {
 
@@ -93,23 +66,9 @@ const analyzeResult = (resolve, keyColumn) => {
     const dataToStorage = { email: ownUser, reports }
 
     refreshReportsUser(ownUser, dataToStorage)
-
-
-
-    /*const dataKey = keyColumn === 'names' ? test : data[keyColumn]
-
-    if(dataKey.length != 0){
-      const keysData = Object.keys(dataKey[0])
-      const definedKeys = keysData.length > 4 ? keysData.splice(0, 4) : keysData // *
-      const valuesData = Object.values(dataKey[0]) // *
-    } else {
-      console.log('vacío')
-    }*/
-
-    //const newData = data.map(({  }) => ({ addresses, parts, jobs, social }))
   }
-
 }
+
 class DropDownTableCreate extends Component {
 
   constructor(props){
@@ -122,7 +81,8 @@ class DropDownTableCreate extends Component {
       idSelection: "1",
       idSelectionReports: "3",
       requestSuccess: 0,
-      keysTable: []
+      keysTable: [],
+      renderedData: 0,
     }
   }
 
@@ -131,27 +91,30 @@ class DropDownTableCreate extends Component {
   }
 
   onDropdownReportsSelection = ({ value, textContent }) => {
-    this.setState({ dropdownReportsSelection: textContent, idSelectionReports: value })
-    console.log(value)
+    const dataResult = generateDataSetsStorage(textContent)
+    
+    this.setState({ keysTable: dataResult.keys, dataSets: dataResult === {} ? [] : dataResult.dataSets, dropdownReportsSelection: textContent, idSelectionReports: value })
+    
   }
 
   render(){
-    const { dataSets, requestSuccess } = this.state
- 
-    if(dataSets.length === 0 && requestSuccess === 0){
+    const { dataSets, requestSuccess, keysTable } = this.state
+
+    if(dataSets && dataSets.length === 0 && requestSuccess === 0){
+
       getReports().then(
         resolve => {
-          console.log('lo hizo')
+
           analyzeResult(resolve, this.state.dropdownReportsSelection)
           const dataResult = generateDataSetsStorage(this.state.dropdownReportsSelection)
           
-          if(dataResult == {}){
+          if(dataResult === {}){
             this.setState({ requestSuccess: 1 })
           } else {
             const { keys, dataSets } = dataResult
-            console.log('dataSets actualizados')
-            this.setState({ keysTable: keys, dataSets })
-            console.log(this.state)
+
+            this.setState({ keysTable: keys, dataSets})
+
           }
 
         }
@@ -167,7 +130,7 @@ class DropDownTableCreate extends Component {
           <DropDownElement onDropdownSelection={this.onDropdownSelection} selection={this.state.dropdownSelection} items={dropdownItems} />
           <DropDownElement onDropdownSelection={this.onDropdownReportsSelection} selection={this.state.dropdownReportsSelection} items={dropdownReportsItems} />
         </div>
-        {validation && <TableElement />}
+        {validation && dataSets.length !== 0 && <TableElement keys={keysTable} dataSets={dataSets} />}
       </div>
     )
   }

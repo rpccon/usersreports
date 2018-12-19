@@ -14,8 +14,6 @@ import {
 } from "reactstrap";
 import './style.sass'
 import LoginRegistry from '../../containers/LoginRegistry/LoginRegistry'
-import DropDownElement from '../DropDownElement/DropDownElement'
-import TableElement from '../TableElement/TableElement'
 import DropDownTableCreate from '../../containers/DropdownTableCreate/DropdownTableCreate'
 
 class NavigationBar extends Component {
