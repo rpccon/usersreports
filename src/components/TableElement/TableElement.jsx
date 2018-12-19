@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table } from 'reactstrap'
+
 import './style.sass'
 
 const mapElementsTable = (keys, dataSets) => (
@@ -11,22 +12,19 @@ const mapElementsTable = (keys, dataSets) => (
   ))
 )
 
-const TableElement = ({ keys, dataSets }) => {
-
-  return (
-    <Table className="table-wrapper-scroll-y">
-      <thead>
-        <tr>
-          {keys.map((elem, index) => (
-            <th key={index}>{elem}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {mapElementsTable(keys, dataSets)}                                       
-      </tbody>
-    </Table>
-  )
-}
+const TableElement = ({ keys, dataSets }) => (
+  <Table className="table-wrapper-scroll-y">
+    <thead>
+      <tr>
+        {keys.map((elem, index) => (
+          <th key={index}>{elem}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {mapElementsTable(keys, dataSets)}                                       
+    </tbody>
+  </Table>
+)
 
 export default TableElement

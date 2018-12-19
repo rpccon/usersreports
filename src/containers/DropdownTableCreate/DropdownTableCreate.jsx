@@ -3,23 +3,21 @@ import axios from 'axios'
 
 import TableElement from '../../components/TableElement/TableElement'
 import DropDownElement from '../../components/DropDownElement/DropDownElement'
-import { API, GET_USER_LOGGED, refreshReportsUser, GET_DATA_FROM_USER } from '../../helpers/strings'
-import CreateElement from '../../components/CreateElement/CreateElement'
-import './style.sass'
+import { API, GET_USER_LOGGED, refreshReportsUser, GET_DATA_FROM_USER } from '../../helpers/helpers'
+import CreateReports from '../CreateReports/CreateReports'
 
+import './style.sass'
 
 const dropdownItems = [
   { value: 1, name: 'My reports' },
   { value: 2, name: 'Create reports' }
 ]
-
 const dropdownReportsItems = [
   { value: 3, name: 'addresses'},
   { value: 4, name: 'names' },
   { value: 5, name: 'social'},
   { value: 6, name: 'jobs' }
 ]
-
 const getReports = () => {
   return new Promise((resolve, reject) => {
     const userEmail = GET_USER_LOGGED().email
@@ -94,7 +92,6 @@ class DropDownTableCreate extends Component {
     const dataResult = generateDataSetsStorage(textContent)
     
     this.setState({ keysTable: dataResult.keys, dataSets: dataResult === {} ? [] : dataResult.dataSets, dropdownReportsSelection: textContent, idSelectionReports: value })
-    
   }
 
   render(){
@@ -106,6 +103,7 @@ class DropDownTableCreate extends Component {
         resolve => {
 
           analyzeResult(resolve, this.state.dropdownReportsSelection)
+          
           const dataResult = generateDataSetsStorage(this.state.dropdownReportsSelection)
           
           if(dataResult === {}){
@@ -114,12 +112,9 @@ class DropDownTableCreate extends Component {
             const { keys, dataSets } = dataResult
 
             this.setState({ keysTable: keys, dataSets})
-
           }
-
         }
-      )    
-
+      )
     }
   
     const validation = this.state.idSelection === "1" || this.state.idSelection === ""
@@ -130,8 +125,8 @@ class DropDownTableCreate extends Component {
           <DropDownElement onDropdownSelection={this.onDropdownSelection} selection={this.state.dropdownSelection} items={dropdownItems} />
           <DropDownElement onDropdownSelection={this.onDropdownReportsSelection} selection={this.state.dropdownReportsSelection} items={dropdownReportsItems} />
         </div>
-        {validation && dataSets.length !== 0 && <TableElement keys={keysTable} dataSets={dataSets} />}
-        {!validation && <CreateElement />}
+        {dataSets && validation && dataSets.length !== 0 && <TableElement keys={keysTable} dataSets={dataSets} />}
+        {!validation && <CreateReports keys={keysTable} category={this.state.dropdownReportsSelection} />}
       </div>
     )
   }

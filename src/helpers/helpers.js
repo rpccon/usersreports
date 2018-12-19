@@ -4,6 +4,8 @@ const DATA_STORAGE = 'usersReports'
 const USER_PASS_ERROR = 'Error in user or password'
 const USER_PASS_EMPTY = 'Remember fill all the blanks'
 const CREATE_REGISTRY = 'Create'
+const EMPTY_STRING = ''
+const CREATE_NEW_REPORT = 'Create new report'
 const REGISTRY_MSJ = 'Registry'
 const DIFFERENT_PASSWORDS = 'The passwords must be the same'
 const EXIST_USER = 'Email unavailable'
@@ -36,7 +38,7 @@ function refreshReportsUser(emailUser, report){
     updateDataLocalStorage(newDataStorage)
   }
 }
-const GET_DATA_FROM_USER= (email) => {
+const GET_DATA_FROM_USER = (email) => {
   const { reports } = GET_DATA_LOCALSTORAGE()
   const data = reports.find((elem) => (elem.email = email))
 
@@ -71,5 +73,7 @@ export {
   setUserLogged,
   GET_USER_LOGGED,
   refreshReportsUser,
-  GET_DATA_FROM_USER
+  GET_DATA_FROM_USER,
+  CREATE_NEW_REPORT,
+  EMPTY_STRING
 }

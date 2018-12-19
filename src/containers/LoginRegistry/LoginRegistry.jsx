@@ -1,7 +1,7 @@
 import React, { Component } from "react"
+
 import Form from '../../components/Form/Form'
 import {
-  LOGIN_LABEL,
   BUTTON_LOGIN_TEXT,
   GET_DATA_LOCALSTORAGE,
   USER_PASS_ERROR,
@@ -13,9 +13,7 @@ import {
   EXIST_USER,
   SUCCESS_NEW_USER,
   setUserLogged
-} from '../../helpers/strings.js'
-
-
+} from '../../helpers/helpers'
 
 const textFields = ({ usernameValue, passwordValue, repeatPasswordValue }, usernameHandleChange, passwordHandleChange, repeatPasswordHandleChange, isRegistry) => {
   const formDatasets =
@@ -30,15 +28,12 @@ const textFields = ({ usernameValue, passwordValue, repeatPasswordValue }, usern
 
   return formDatasets
 }
-
 const validateUserPassword = (user, password) => {
   const { users } = GET_DATA_LOCALSTORAGE()
-
   const result = users.find((elem) => elem.email === user && elem.password === password )
 
   return result
 }
-
 const validateIfUsersExists = (email) => {
   const { users } = GET_DATA_LOCALSTORAGE()
   const result = users.find((elem) => elem.email === email )
@@ -104,7 +99,7 @@ class LoginRegistry extends Component {
       openMasterPageMenu()
    }
   }
-  
+
   cleanBlanks(){
     const cleanVariables = {
       usernameValue: "",
@@ -116,6 +111,7 @@ class LoginRegistry extends Component {
   
     this.setState(cleanVariables)
   }
+
   validateRegistryCredentials(params) {
     const { usernameValue, passwordValue, repeatPasswordValue } = params
     const verifyRegistry = this.props.isRegistry ? passwordValue === repeatPasswordValue : passwordValue
@@ -140,7 +136,6 @@ class LoginRegistry extends Component {
 
   onClickAction = () => {
     const { usernameValue, passwordValue, repeatPasswordValue } = this.state
-    
     const credentials = [usernameValue, passwordValue]
 
     if(this.props.isRegistry){
@@ -152,15 +147,13 @@ class LoginRegistry extends Component {
     else {
       this.validateRegistryCredentials(this.state)
     }
-    
   }
 
   validateButtonLabelMsj = () => (
-    this.props.isRegistry ? [CREATE_REGISTRY, REGISTRY_MSJ] : [LOGIN_LABEL, BUTTON_LOGIN_TEXT]
+    this.props.isRegistry ? [CREATE_REGISTRY, REGISTRY_MSJ] : [BUTTON_LOGIN_TEXT, BUTTON_LOGIN_TEXT]
   )
-  
-  render(){
 
+  render(){
     const textFieldsResult = textFields(this.state, this.usernameHandleChange, this.passwordHandleChange, this.repeatPasswordHandleChange, this.props.isRegistry)
     const labels = this.validateButtonLabelMsj()
 

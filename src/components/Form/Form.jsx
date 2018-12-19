@@ -4,6 +4,7 @@ import {
   Label,
   Button
 } from 'react-bootstrap'
+
 import './style.sass'
 
 class Form extends Component{
