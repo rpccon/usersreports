@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table } from 'reactstrap'
 import './style.sass'
 
+
 class TableElement extends Component {
   render() {
     return (

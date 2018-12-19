@@ -11,7 +11,8 @@ import {
   REGISTRY_MSJ,
   DIFFERENT_PASSWORDS,
   EXIST_USER,
-  SUCCESS_NEW_USER
+  SUCCESS_NEW_USER,
+  setUserLogged
 } from '../../helpers/strings.js'
 
 
@@ -99,6 +100,7 @@ class LoginRegistry extends Component {
         this.updateErrorMessage(SUCCESS_NEW_USER, 1)
       }
    } else {
+      setUserLogged(usernameValue, passwordValue)
       openMasterPageMenu()
    }
   }
