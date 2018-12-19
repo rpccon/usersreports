@@ -13,10 +13,9 @@ import {
   DropdownItem
 } from 'reactstrap'
 
-import { LOGIN_LABEL } from '../../helpers/helpers'
-
 import './style.sass'
 
+import { LOGIN_LABEL } from '../../helpers/helpers'
 import LoginRegistry from '../../containers/LoginRegistry/LoginRegistry'
 import DropDownTableCreate from '../../containers/DropdownTableCreate/DropdownTableCreate'
 

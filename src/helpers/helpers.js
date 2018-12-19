@@ -14,7 +14,7 @@ const USER_LOGGED = 'userLogged'
 const API = 'https://www.beenverified.com/hk/dd/email?email='
 
 const USERS_REPORTS = {
-  users: [{ email: 'skip.suva@gmail.com', password: '123' }],
+  users: [{ email: 'skip.suva@gmail.com', password: 'BV-API-Challenge​' }],
   reports: []
 }
 
