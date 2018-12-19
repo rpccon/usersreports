@@ -32,6 +32,10 @@ class NavigationBar extends Component {
     this.setState({ isInRegistry: !this.state.isInRegistry })
   }
 
+  logOut = () => {
+    this.setState({ isUserViewOpen: false })
+  }
+
   openMasterPageMenu = () => {
     this.setState({ isUserViewOpen: !this.isUserViewOpen })
   }
@@ -65,7 +69,7 @@ class NavigationBar extends Component {
                   {/*<DropdownItem>Option 1</DropdownItem>
                     <DropdownItem>Option 2</DropdownItem>*/}
                     <DropdownItem divider />
-                    <DropdownItem>Go out</DropdownItem>
+                    <DropdownItem onClick={this.logOut}>Go out</DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>}
 

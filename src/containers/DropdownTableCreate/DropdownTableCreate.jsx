@@ -4,7 +4,7 @@ import axios from 'axios'
 import TableElement from '../../components/TableElement/TableElement'
 import DropDownElement from '../../components/DropDownElement/DropDownElement'
 import { API, GET_USER_LOGGED, refreshReportsUser, GET_DATA_FROM_USER } from '../../helpers/strings'
-
+import CreateElement from '../../components/CreateElement/CreateElement'
 import './style.sass'
 
 
@@ -131,6 +131,7 @@ class DropDownTableCreate extends Component {
           <DropDownElement onDropdownSelection={this.onDropdownReportsSelection} selection={this.state.dropdownReportsSelection} items={dropdownReportsItems} />
         </div>
         {validation && dataSets.length !== 0 && <TableElement keys={keysTable} dataSets={dataSets} />}
+        {!validation && <CreateElement />}
       </div>
     )
   }
